@@ -7,10 +7,10 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-v = Video.create(name: "Monk", description: "USA's great series on the dude that is afraid of getting dirty, but needs to because he is a brilliant detective.  Hahahahahahahhahhahhahaha.", large_image_url: "/tmp/monk_large.jpg", small_image_url: "/tmp/monk.jpg", rating: 4.5 )
-
-c = Category.create(name: "TV Commedies")
-
-v.category = c
-
-v.save
+comedies = Category.create!(name: "TV Commedies")
+Video.create!(name: "Monk", # videos do not have names, but titles. :)
+              description: "USA's great series on the dude that is afraid of getting dirty, but needs to because he is a brilliant detective.  Hahahahahahahhahhahhahaha.",
+              large_image_url: "/tmp/monk_large.jpg",
+              small_image_url: "/tmp/monk.jpg",
+              category: comedies,
+              rating: 4.5)
