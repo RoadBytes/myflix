@@ -3,4 +3,4 @@
     %header
       %h3= link_to category.name, category
     .videos.row
-      = render "shared/list_videos", videos: category.videos
+      = render "shared/list_videos", videos: category.recent_videos
