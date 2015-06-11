@@ -1,8 +1,8 @@
 class Category < ActiveRecord::Base
-  has_many :videos, -> { order(:title) }
+  has_many :videos, -> { order(created_at: :desc) }
   validates :name, presence: :true
 
   def recent_videos
-    self.videos.sort_by{|video| video.created_at }.reverse[0, 6]
+    self.videos[0, 6]
   end
 end

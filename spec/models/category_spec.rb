@@ -4,7 +4,7 @@ describe Category do
   it { should have_many(:videos) }
   it { should validate_presence_of(:name) }
 
-  describe "method recent_videos" do
+  describe "#recent_videos" do
     before :each do
        @drama   = create(:category, name: "Drama")
        @first   = create(:video, title: "First",   created_at: 1.day.ago, category: @drama)

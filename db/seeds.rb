@@ -9,6 +9,7 @@
 
 comedies = Category.create!(name: "TV Commedies")
 drama    = Category.create!(name: "TV Drama")
+action   = Category.create!(name: "Action")
 
 Video.create!(title: "Monk",
               description: "USA's great series on the dude that is afraid of getting dirty, but needs to because he is a brilliant detective.  Hahahahahahahhahhahhahaha.",
@@ -38,3 +39,11 @@ Video.create!(title:           "Title Two",
               category:        drama,
               rating:          2.2)
 
+8.times do
+  Video.create!(title:         "Testing", 
+              description:     "Test video title that's not too exciting again",
+              large_image_url: "/tmp/monk_large.jpg",
+              small_image_url: "/tmp/monk.jpg",
+              category:        action,
+              rating:          4.2)
+end
