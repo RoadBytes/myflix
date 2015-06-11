@@ -20,11 +20,16 @@ group :development, :test do
   gem 'pry'
   gem 'pry-nav'
   gem 'rspec-rails', '2.99'
+  gem "factory_girl_rails", "~> 4.2.1"
 end
 
 group :test do
-  gem 'database_cleaner', '1.2.0'
-  gem 'rspec-rails', '2.99'
+  gem "shoulda-matchers"
+  gem "faker", "~> 1.1.2"
+  gem "capybara", "~> 2.1.0"
+  gem "database_cleaner", "~> 1.0.1"
+  gem "launchy", "~> 2.3.0"
+  gem "selenium-webdriver", "~> 2.39.0"
 end
 
 group :production do

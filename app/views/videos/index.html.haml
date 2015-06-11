@@ -3,7 +3,4 @@
     %header
       %h3= link_to category.name, category
     .videos.row
-      - category.videos.each do |video|
-        .video.col-sm-2
-          = link_to video do
-            = image_tag video.small_image_url
+      = render "shared/list_videos", videos: category.videos

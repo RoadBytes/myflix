@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe Video do
-  it "saves a video" do
-    video = Video.new(title: "Video Name", description: "Test video title that's not too exciting")
-    video.save
-    video.title.should == "Video Name"
+  it "has a valid factory" do
+    expect(build(:video)).to be_valid
   end
+
+  it { should belong_to(:category)}
+  it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:description) }
 end
