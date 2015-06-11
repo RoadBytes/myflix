@@ -6,6 +6,7 @@ class Video < ActiveRecord::Base
 
 
   def self.search_by_title(title)
+    return [] if title.blank?
     Video.where('title ILIKE ?', '%' + title + '%')
   end
 end
