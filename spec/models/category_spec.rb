@@ -27,7 +27,7 @@ describe Category do
     end
 
     it "will return all videos if there are less than six videos in the category" do
-      expect(@comedy.recent_videos).to include(@comedy_first, @comedy_second, @comedy_third)
+      expect(@comedy.recent_videos).to match_array([@comedy_first, @comedy_second, @comedy_third])
     end
     
     it "will return six videos in a category" do

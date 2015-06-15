@@ -47,3 +47,7 @@ Video.create!(title:           "Title Two",
               category:        action,
               rating:          4.2)
 end
+
+joe = User.create!(email: "test@test.com", 
+                   full_name: "Joe Butts", 
+                   password: "123456")
