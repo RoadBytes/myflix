@@ -1,9 +1,9 @@
 Myflix::Application.routes.draw do
   get 'ui(/:action)', controller: 'ui'
 
-  get  'signin'  => 'sessions#new'
-  post 'signin'  => 'sessions#create'
-  post 'signout' => 'sessions#destroy'
+  get    'signin'  => 'sessions#new'
+  post   'signin'  => 'sessions#create'
+  delete 'signout' => 'sessions#destroy'
   
   root to: "videos#front"
 

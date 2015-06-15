@@ -48,7 +48,6 @@ Video.create!(title:           "Title Two",
               rating:          4.2)
 end
 
-joe = User.create!(email: "test@test.com", full_name: "Joe Butts")
-
-joe.password = "123456"
-joe.save!
+joe = User.create!(email: "test@test.com", 
+                   full_name: "Joe Butts", 
+                   password: "123456")

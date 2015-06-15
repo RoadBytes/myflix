@@ -1,24 +1,10 @@
 require 'spec_helper'
 
 describe User do
-  it { should validate_presence_of(:email) }
-  it { should validate_presence_of(:full_name) }
-  it { should validate_presence_of(:password) }
-
-  it "should not validate a user with password less than 6 characters" do
-    joe = build(:user, password: "12345")
-    expect(joe.valid?).to eq(false)
-  end
-
-  it "should validate a user with a password equal to 6 characters" do
-    joe = build(:user, password: "123456")
-    expect(joe.valid?).to eq(true)
-  end
-
-  it "should validate a user with a password more than 6  characters" do
-    joe = build(:user, password: "1234567")
-    expect(joe.valid?).to eq(true)
-  end
+  it { validate_presence_of(:email) }
+  it { validate_presence_of(:full_name) }
+  it { validate_presence_of(:password) }
+  it { validate_length_of(:password).is_at_least(6) }
 
   describe "#authenticate" do
     it "should return object when password is correct" do

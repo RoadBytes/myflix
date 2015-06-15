@@ -17,6 +17,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user
-    block_client if !logged_in?
+    block_client unless logged_in?
   end
 end
