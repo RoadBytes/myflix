@@ -38,12 +38,20 @@ describe ReviewsController do
                                                video_id: video.id)
         end
 
+        it "redirects to show/video template" do
+          expect(response).to render_template "videos/show"
+        end
+
         it "does not save @review to database" do
           expect(Review.count).to eq 0
         end
 
         it "sets @review instance" do
           expect(assigns(:review)).to be_instance_of(Review)
+        end
+
+        it "sets @video instance" do
+          expect(assigns(:video)).to be_instance_of(Video)
         end
 
         it "@review instance has errors when input is invalid" do

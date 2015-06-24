@@ -3,7 +3,7 @@ class Video < ActiveRecord::Base
   validates :description, presence: true
 
   belongs_to :category
-  has_many   :reviews, -> { order(created_at: :desc) }
+  has_many   :reviews, -> { order "created_at DESC" }
 
   def self.search_by_title(title)
     return [] if title.blank?
