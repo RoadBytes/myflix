@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   validates :password,  presence:   true,
                         length:     { minimum: 6 },
                         if:         lambda{ new_record? || !password.nil? }
+  has_many  :reviews
   has_secure_password 
 
 end

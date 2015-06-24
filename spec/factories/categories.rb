@@ -1,3 +1,5 @@
+require 'faker'
+
 FactoryGirl.define do 
   factory :category do
     name           "TV Comedies"

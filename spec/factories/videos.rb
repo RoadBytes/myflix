@@ -1,8 +1,10 @@
+require 'faker'
+
 FactoryGirl.define do 
   factory :video do
     association     :category
-    title           "Video Name"
-    description     "Test video title that's not too exciting"
+    title           { Faker::Lorem.words(2).join(" ") }
+    description     { Faker::Lorem.words(5).join(" ") }
     large_image_url "/large.jpg"
     small_image_url "/small.jpg"
     rating          4.5
