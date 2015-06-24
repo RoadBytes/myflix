@@ -10,9 +10,7 @@ describe ReviewsController do
         before :each do
           session[:user_id] = current_user.id
           post :create, video_id: video.id, 
-                        review: attributes_for(:review, 
-                                               user_id: current_user.id, 
-                                               video_id: video.id)
+                        review: attributes_for(:review)
         end
 
         it "saves @review to database" do
@@ -32,10 +30,7 @@ describe ReviewsController do
         before :each do
           session[:user_id] = current_user.id
           post :create, video_id: video.id, 
-                        review: attributes_for(:review, 
-                                               message: "",
-                                               user_id: current_user.id, 
-                                               video_id: video.id)
+                        review: attributes_for(:review, message: "")
         end
 
         it "redirects to show/video template" do
@@ -58,8 +53,8 @@ describe ReviewsController do
           expect(assigns(:review).errors.size).to be > 0
         end
 
-        it "has flash[:error] message" do
-          expect(flash[:error]).to_not be nil
+        it "has flash[:danger] message" do
+          expect(flash[:danger]).to_not be nil
         end
       end
     end
@@ -72,4 +67,3 @@ describe ReviewsController do
     end
   end
 end
-
