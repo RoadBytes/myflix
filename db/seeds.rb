@@ -12,7 +12,7 @@ comedies = Category.create!(name: "TV Commedies")
 drama    = Category.create!(name: "TV Drama")
 action   = Category.create!(name: "Action")
 
-monk = Video.create!(title: "Monk",
+monk = Video.create!(title:    "Monk",
               description:     Faker::Lorem.paragraph(2),
               large_image_url: "/tmp/monk_large.jpg",
               small_image_url: "/tmp/monk.jpg",
@@ -41,7 +41,7 @@ Video.create!(title:           "Title Two",
               rating:          2.2)
 
 8.times do
-  Video.create!(title:         Faker::Name.name,
+  Video.create!(title:           Faker::Name.name,
                 description:     Faker::Lorem.paragraph(2),
                 large_image_url: "/tmp/monk_large.jpg",
                 small_image_url: "/tmp/monk.jpg",
@@ -49,13 +49,13 @@ Video.create!(title:           "Title Two",
                 rating:          4.2)
 end
 
-joe = User.create!(email: "test@test.com", 
+joe = User.create!(email:     "test@test.com", 
                    full_name: "Joe Butts", 
-                   password: "123456")
+                   password:  "123456")
 
 4.times do
   Review.create!(message: Faker::Lorem.paragraph(2),
-                 rating: rand(5),
-                 user: joe, 
-                 video: monk)
+                 rating:  rand(5),
+                 user:    joe, 
+                 video:   monk)
 end
