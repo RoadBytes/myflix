@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe SessionsController do
   describe "GET #new" do
-    it "renders new template without authenticated user" do
-      get :new
-      expect(response).to render_template :new
-    end
-
     it "redirects to home_path if there's a current_user" do
       session[:user_id] = create(:user)
       get :new

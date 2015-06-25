@@ -22,8 +22,7 @@
         %fieldset
           .row
             .col-sm-3
-              - rating_values = [["5 Stars", 5], ["4 Stars", 4], ["3 Stars", 3], 
-                                 ["2 Stars", 2], ["1 Star" , 1], ["0 Stars", 0]]
+              - rating_values = [5, 4, 3, 2, 1].map {|number| [pluralize(number, "Star")]}
               = f.select(:rating, rating_values, label: "Rate this Video")
           .row
             .col-sm-8
