@@ -11,17 +11,11 @@ class Video < ActiveRecord::Base
   end
 
   def average_rating
-    return 0 if(review_count < 1)
-    review_total/review_count
-  end
-
-  def review_total
-    total = 0
-    self.reviews.each { |review| total += review.rating }
-    total
+    return 0 if reviews.empty?
+    reviews.average(:rating)
   end
 
   def review_count
-    self.reviews.size
+    reviews.size
   end
 end

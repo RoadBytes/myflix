@@ -6,18 +6,16 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-require 'faker'
-
 comedies = Category.create!(name: "TV Commedies")
 drama    = Category.create!(name: "TV Drama")
 action   = Category.create!(name: "Action")
 
-monk = Video.create!(title:    "Monk",
-              description:     Faker::Lorem.paragraph(2),
-              large_image_url: "/tmp/monk_large.jpg",
-              small_image_url: "/tmp/monk.jpg",
-              category:        comedies,
-              rating:          4.5)
+monk = Video.create!(title:           "Monk",
+                     description:     Faker::Lorem.paragraph(2),
+                     large_image_url: "/tmp/monk_large.jpg",
+                     small_image_url: "/tmp/monk.jpg",
+                     category:        comedies,
+                     rating:          4.5)
 
 Video.create!(title:           "Video Name", 
               description:     "Test video title that's not too exciting",

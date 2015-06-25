@@ -20,19 +20,8 @@ describe VideosController do
     end
 
     context "with unauthenticated user" do
-      before :each do
-        get :show, id: video.id
-      end
-
-      it "sets @video to nil" do
-        expect(assigns(:video)).to eq nil
-      end
-
-      it "sets @review to nil" do
-        expect(assigns(:review)).to eq nil
-      end
-
       it "redirects to root_path" do
+        get :show, id: video.id
         expect(response).to redirect_to root_path
       end
     end

@@ -30,7 +30,7 @@
               = f.text_area :message, label: "Write Review", size: "24x6"
         %fieldset.form-group.actions.clearfix
           = f.submit "Submit", class: "btn"
-          = link_to "Cancel", video_path(@video)
+          = link_to "Cancel", @video
       %header
         %h3 User Reviews(#{@video.review_count})
       %ul
