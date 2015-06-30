@@ -9,7 +9,7 @@ Myflix::Application.routes.draw do
 
   get '/home'     => 'videos#index'
   get '/register' => 'users#new'
-  get '/my_queue' => 'queue#index'
+  get '/my_queue' => 'queue_item#index'
 
   resources :users, only: [:create]
 
