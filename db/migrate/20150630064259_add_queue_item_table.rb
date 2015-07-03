@@ -4,6 +4,8 @@ class AddQueueItemTable < ActiveRecord::Migration
       t.integer :user_id
       t.integer :video_id
       t.integer :position
+
+      t.timestamps
     end
   end
 end
