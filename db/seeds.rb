@@ -57,3 +57,5 @@ joe = User.create!(email:     "test@test.com",
                  user:    joe, 
                  video:   monk)
 end
+
+QueueItem.create!(user: joe, video: monk)

@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
                         length:     { minimum: 6 },
                         if:         lambda{ new_record? || !password.nil? }
   has_many  :reviews
+  has_many  :queue_items
   has_secure_password 
 
 end
