@@ -7,9 +7,10 @@ Myflix::Application.routes.draw do
   
   root to: "videos#front"
 
-  get '/home'     => 'videos#index'
-  get '/register' => 'users#new'
-  get '/my_queue' => 'queue_items#index'
+  get    '/home'         => 'videos#index'
+  get    '/register'     => 'users#new'
+  get    '/my_queue'     => 'queue_items#index'
+  delete '/my_queue/:id' => 'queue_items#destroy'
 
   resources :users, only: [:create]
 
