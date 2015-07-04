@@ -9,8 +9,10 @@ Myflix::Application.routes.draw do
 
   get    '/home'         => 'videos#index'
   get    '/register'     => 'users#new'
+
   get    '/my_queue'     => 'queue_items#index'
-  delete '/my_queue/:id' => 'queue_items#destroy'
+
+  resources :queue_items, only: [:create, :destroy]
 
   resources :users, only: [:create]
 

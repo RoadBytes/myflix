@@ -44,10 +44,35 @@ describe QueueItemsController do
         expect(QueueItem.count).to eq(1)
       end
     end
+
+    it "redirects to root_path for unauthenticated users" do
+      delete :destroy, id: queue_item_one.id
+      expect(response).to redirect_to root_path
+    end
   end
 
-  it "redirects to root_path for unauthenticated users" do
-    delete :destroy, id: queue_item_one.id
-    expect(response).to redirect_to root_path
+  describe "POST #create" do
+    let(:authenticated_user) { create(:user) }
+    let(:queue_item_one)     { build(:queue_item, user: authenticated_user, video: create(:video)) }
+
+    context "Authenticated User" do
+      before :each do
+        session[:user_id] = authenticated_user.id
+      end
+
+      context "Authenticated User" do
+        it "adds item to current_users queue items" do
+          post :create, video_id: queue_item_one.id
+          expect(QueueItem.count).to eq 1
+        end
+
+        it "redirects to /my_queue"
+        it "sets queue_item list order to last value"
+        it "only adds videos to queue one time"
+        it "does not add item to non current_users queue items"
+      end
+    end
+
+    it "redirects unauthenticated user to root path"
   end
 end
