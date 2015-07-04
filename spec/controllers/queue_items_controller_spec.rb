@@ -60,19 +60,33 @@ describe QueueItemsController do
         session[:user_id] = authenticated_user.id
       end
 
-      context "Authenticated User" do
-        it "adds item to current_users queue items" do
-          post :create, video_id: queue_item_one.id
-          expect(QueueItem.count).to eq 1
-        end
+      it "adds item to current_users queue items" do
+        post :create, video_id: queue_item_one.video_id, user_id: authenticated_user.id
+        expect(QueueItem.count).to eq 1
+      end
 
-        it "redirects to /my_queue"
-        it "sets queue_item list order to last value"
-        it "only adds videos to queue one time"
-        it "does not add item to non current_users queue items"
+      it "redirects to /my_queue" do
+        post :create, video_id: queue_item_one.video_id, user_id: authenticated_user.id
+        expect(response).to redirect_to my_queue_path
+      end
+
+      it "sets queue_item list position to last value" do
+        4.times {create(:queue_item, user: authenticated_user)}
+        post :create, video_id: queue_item_one.video_id, user_id: authenticated_user.id
+        expect(authenticated_user.queue_items.last.position).to eq 5
+      end
+
+      it "does not add item to non current_users queue items" do
+        other_user       = create(:user)
+        other_queue_item = build(:queue_item, user: other_user, video: create(:video))
+        post :create, video_id: other_queue_item.video_id, user_id: other_user.id
+        expect(QueueItem.count).to eq 0
       end
     end
 
-    it "redirects unauthenticated user to root path"
+    it "redirects unauthenticated user to root path" do
+      post :create
+      expect(response).to redirect_to root_path
+    end
   end
 end

@@ -6,7 +6,12 @@ class QueueItemsController < ApplicationController
   end
 
   def create
-    QueueItem.create(user_id: current_user.id, video_id: params[:video_id])
+    if params[:user_id].to_i == current_user.id
+      QueueItem.create(user_id:  params[:user_id],
+                       video_id: params[:video_id],
+                       position: position_assignment)
+    end
+
     redirect_to my_queue_path
   end
 
