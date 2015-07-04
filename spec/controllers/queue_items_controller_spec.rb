@@ -61,26 +61,26 @@ describe QueueItemsController do
       end
 
       it "adds item to current_users queue items" do
-        post :create, video_id: queue_item_one.video_id, user_id: authenticated_user.id
+        post :create, video_id: queue_item_one.video_id
         expect(QueueItem.count).to eq 1
       end
 
       it "redirects to /my_queue" do
-        post :create, video_id: queue_item_one.video_id, user_id: authenticated_user.id
+        post :create, video_id: queue_item_one.video_id
         expect(response).to redirect_to my_queue_path
       end
 
       it "sets queue_item list position to last value" do
         4.times {create(:queue_item, user: authenticated_user)}
-        post :create, video_id: queue_item_one.video_id, user_id: authenticated_user.id
+        post :create, video_id: queue_item_one.video_id
         expect(authenticated_user.queue_items.last.position).to eq 5
       end
 
-      it "does not add item to non current_users queue items" do
-        other_user       = create(:user)
-        other_queue_item = build(:queue_item, user: other_user, video: create(:video))
-        post :create, video_id: other_queue_item.video_id, user_id: other_user.id
-        expect(QueueItem.count).to eq 0
+      it "does not add video to queue if it's already in queue" do
+        queue_item_one.save
+        video = queue_item_one.video
+        post :create, video_id: queue_item_one.video_id
+        expect(QueueItem.count).to eq 1
       end
     end
 
