@@ -6,11 +6,11 @@ class QueueItemsController < ApplicationController
   end
 
   def create
-    video = Video.find_by id: params[:video_id]
+    video = Video.find_by id: params[:video]
 
-    unless my_queue_contains?(video)
-      QueueItem.create(user_id:  current_user.id,
-                       video_id: params[:video_id],
+    unless current_user.my_queue_contains?(video)
+      QueueItem.create(user:  current_user,
+                       video: video,
                        position: position_assignment)
     end
 
@@ -21,11 +21,5 @@ class QueueItemsController < ApplicationController
     queue_item = QueueItem.find_by id: params[:id]
     queue_item.delete if queue_item.user == current_user
     redirect_to my_queue_path
-  end
-
-  private
-
-  def my_queue_contains?(video)
-    current_user.queue_items.map{|queue_item| queue_item.video }.include?(video)
   end
 end
