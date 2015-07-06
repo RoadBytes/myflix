@@ -11,7 +11,7 @@ class QueueItemsController < ApplicationController
     unless current_user.my_queue_contains?(video)
       QueueItem.create(user:  current_user,
                        video: video,
-                       position: position_assignment)
+                       position: current_user.position_assignment)
     end
 
     redirect_to my_queue_path

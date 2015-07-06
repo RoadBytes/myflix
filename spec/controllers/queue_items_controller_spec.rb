@@ -72,14 +72,14 @@ describe QueueItemsController do
 
       it "sets queue_item list position to last value" do
         4.times {create(:queue_item, user: authenticated_user)}
-        post :create, video_id: queue_item_one.video_id
+        post :create, video: queue_item_one.video
         expect(authenticated_user.queue_items.last.position).to eq 5
       end
 
       it "does not add video to queue if it's already in queue" do
         queue_item_one.save
         video = queue_item_one.video
-        post :create, video_id: queue_item_one.video_id
+        post :create, video: queue_item_one.video
         expect(QueueItem.count).to eq 1
       end
     end

@@ -8,8 +8,4 @@ class QueueItem < ActiveRecord::Base
     review = Review.where(user_id: user.id, video_id: video.id).first
     review.rating unless review.nil?
   end
-
-  def position_assignment
-    current_user.queue_items.size + 1
-  end
 end
