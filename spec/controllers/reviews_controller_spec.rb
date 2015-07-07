@@ -7,9 +7,10 @@ describe ReviewsController do
 
     context "with authenticated user" do
       context "valid input" do
+
         before :each do
           session[:user_id] = current_user.id
-          post :create, video: video
+          post :create, video_id: video.id, review: { message: "Sweet!", rating: "4" }
         end
 
         it "saves @review to database" do
@@ -26,11 +27,10 @@ describe ReviewsController do
       end
 
       context "with invalid input" do
-        let(:review) {Review.new()}
 
         before :each do
           session[:user_id] = current_user.id
-          post :create, video: video, review: review
+          post :create, video_id: video.id, review: { message: "", rating: "4" }
         end
 
         it "redirects to show/video template" do
@@ -61,7 +61,7 @@ describe ReviewsController do
 
     context "with an unauthenticated User" do
       it "redirects the user to the front page" do
-        post :create, video: video
+        post :create, video_id: video.id
         expect(response).to redirect_to root_path
       end
     end

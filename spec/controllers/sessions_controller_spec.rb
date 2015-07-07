@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SessionsController do
   describe "GET #new" do
     it "redirects to home_path if there's a current_user" do
-      session[:user_id] = create(:user)
+      session[:user_id] = Fabricate(:user)
       get :new
       expect(response).to redirect_to home_path 
     end
@@ -11,7 +11,7 @@ describe SessionsController do
 
   describe "POST #create" do
     context "with password/credentials correct" do
-      let(:signed_in_user) { create(:user) }
+      let(:signed_in_user) { Fabricate(:user) }
       before :each do
         post :create, email: signed_in_user.email, password: signed_in_user.password
       end
@@ -31,7 +31,7 @@ describe SessionsController do
 
     context "with password/credentials incorrect" do
       before :each do
-        unauthenticated_user = create(:user, password: "password")
+        unauthenticated_user = Fabricate(:user, password: "password")
         post :create, email: unauthenticated_user.email, password: "wrong_password"
       end
 
@@ -51,7 +51,7 @@ describe SessionsController do
 
   describe "DELETE #destroy" do
     before :each do
-      session[:user_id] = create(:user).id
+      session[:user_id] = Fabricate(:user).id
       delete :destroy
     end
 
