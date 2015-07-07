@@ -9,12 +9,12 @@ describe User do
 
   describe "#authenticate" do
     it "should return object when password is correct" do
-      joe = create(:user, password: "123456")
+      joe = Fabricate(:user, password: "123456")
       expect(joe.authenticate("123456")).to eq(joe)
     end
 
     it "should return false when password is correct" do
-      joe = create(:user, password: "123456")
+      joe = Fabricate(:user, password: "123456")
       expect(joe.authenticate("wrong password")).to eq(false)
     end
   end

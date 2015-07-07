@@ -2,15 +2,14 @@ require 'spec_helper'
 
 describe ReviewsController do
   describe "POST #create" do
-    let(:video)        { create(:video) }
-    let(:current_user) { create(:user) }
+    let(:video)        { Fabricate(:video) }
+    let(:current_user) { Fabricate(:user) }
 
     context "with authenticated user" do
       context "valid input" do
         before :each do
           session[:user_id] = current_user.id
-          post :create, video_id: video.id, 
-                        review: attributes_for(:review)
+          post :create, video: video
         end
 
         it "saves @review to database" do
@@ -27,10 +26,11 @@ describe ReviewsController do
       end
 
       context "with invalid input" do
+        let(:review) {Review.new()}
+
         before :each do
           session[:user_id] = current_user.id
-          post :create, video_id: video.id, 
-                        review: attributes_for(:review, message: "")
+          post :create, video: video, review: review
         end
 
         it "redirects to show/video template" do
@@ -61,7 +61,7 @@ describe ReviewsController do
 
     context "with an unauthenticated User" do
       it "redirects the user to the front page" do
-        post :create, video_id: video.id, review: attributes_for(:review)
+        post :create, video: video
         expect(response).to redirect_to root_path
       end
     end
