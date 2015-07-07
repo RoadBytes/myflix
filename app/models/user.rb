@@ -10,4 +10,12 @@ class User < ActiveRecord::Base
   has_many  :queue_items
   has_secure_password 
 
+
+  def my_queue_contains?(video)
+    queue_items.map{|queue_item| queue_item.video }.include?(video)
+  end
+
+  def position_assignment
+    queue_items.size + 1
+  end
 end

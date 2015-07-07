@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe VideosController do
   describe "GET #show" do
-    let(:video) { create(:video) }
+    let(:video) { Fabricate(:video) }
 
     context "with authenticated user" do
       before :each do
-        session[:user_id] = create(:user).id
+        session[:user_id] = Fabricate(:user).id
         get :show, id: video.id
       end
 
@@ -28,10 +28,10 @@ describe VideosController do
   end
 
   describe "POST #search" do
-    let(:monk) { create(:video, title: "Monk") }
+    let(:monk) { Fabricate(:video, title: "Monk") }
 
     it "assigns the appropriate videos from the database with authenticated user" do
-      session[:user_id] = create(:user).id
+      session[:user_id] = Fabricate(:user).id
       post :search, search: "m"
       expect(assigns(:search_result)).to eq([monk])
     end

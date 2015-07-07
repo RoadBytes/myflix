@@ -3,6 +3,6 @@ class Category < ActiveRecord::Base
   validates :name, presence: :true
 
   def recent_videos
-    self.videos[0, 6]
+    videos[0, 6]
   end
 end
