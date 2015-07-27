@@ -18,7 +18,7 @@
             - @queue_items.each do |queue_item|
               %tr
                 %td
-                  = text_field_tag "List Order", queue_item.position, class: "form-control"
+                  = text_field_tag "list-order-#{queue_item.position}", queue_item.position, class: "form-control"
                 %td
                   = link_to queue_item.video.title, video_path(queue_item.video)
                 %td
@@ -30,4 +30,4 @@
                 %td
                   = link_to queue_item, method: "DELETE" do
                     %i.glyphicon.glyphicon-remove
-        = button_to "Update Instant Queue", nil, class: "btn btn-default"
+        = button_to "Update Instant Queue", nil, class: "btn btn-default", data: {test: "here"}

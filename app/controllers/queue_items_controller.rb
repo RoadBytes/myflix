@@ -22,4 +22,8 @@ class QueueItemsController < ApplicationController
     queue_item.delete if queue_item.user == current_user
     redirect_to my_queue_path
   end
+
+  def order
+    binding.pry
+  end
 end
