@@ -89,4 +89,30 @@ describe QueueItemsController do
       expect(response).to redirect_to root_path
     end
   end
+
+  describe "POST #order" do
+    context "with valid inputs" do
+      it "redirects to the my queue page" do
+        signed_in_user = Fabricate(:user)
+        session[:user_id] = signed_in_user.id
+        queue_item_one = Fabricate(:queue_item)
+        queue_item_two = Fabricate(:queue_item)
+        post :order, queue_items: [{id: queue_item_one.id, position: 2}, {id: queue_item_two.id, position: 1}]
+        expect(response).to redirect_to my_queue_path
+      end
+
+      it "reorders the queue items" do
+        signed_in_user = Fabricate(:user)
+        session[:user_id] = signed_in_user.id
+        queue_item_one = Fabricate(:queue_item, position: 1)
+        queue_item_two = Fabricate(:queue_item, position: 2)
+        post :order, queue_items: [{id: queue_item_one.id, position: 2}, {id: queue_item_two.id, position: 1}]
+        expect(signed_in_user.queue_items).to eq([queue_item_two, queue_item_one])
+      end
+      it "normalizes the position numbers"
+    end
+    context "with invalid inputs"
+    context "with unauthenticated users"
+    context "with queue items that do not belong to the current user"
+  end
 end

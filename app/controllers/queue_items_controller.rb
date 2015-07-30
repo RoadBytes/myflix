@@ -24,6 +24,6 @@ class QueueItemsController < ApplicationController
   end
 
   def order
-    binding.pry
+    redirect_to my_queue_path
   end
 end
