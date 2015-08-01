@@ -71,7 +71,7 @@ describe QueueItemsController do
       end
 
       it "sets queue_item list position to last value" do
-        4.times {Fabricate(:queue_item, user: authenticated_user)}
+        4.times { |count| Fabricate(:queue_item, user: authenticated_user, position: count + 1) }
         post :create, video: @queue_item_one.video
         expect(authenticated_user.queue_items.last.position).to eq 5
       end
@@ -92,26 +92,52 @@ describe QueueItemsController do
 
   describe "POST #order" do
     context "with valid inputs" do
-      it "redirects to the my queue page" do
-        signed_in_user = Fabricate(:user)
+      let(:signed_in_user) { Fabricate(:user) }
+
+      before :each do
         session[:user_id] = signed_in_user.id
-        queue_item_one = Fabricate(:queue_item)
-        queue_item_two = Fabricate(:queue_item)
-        post :order, queue_items: [{id: queue_item_one.id, position: 2}, {id: queue_item_two.id, position: 1}]
+        @queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
+        @queue_item_two = Fabricate(:queue_item, user: signed_in_user, position: 2)
+      end
+
+      it "redirects to the my queue page" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2}, {id: @queue_item_two.id, position: 1}]
         expect(response).to redirect_to my_queue_path
       end
 
       it "reorders the queue items" do
-        signed_in_user = Fabricate(:user)
-        session[:user_id] = signed_in_user.id
-        queue_item_one = Fabricate(:queue_item, position: 1)
-        queue_item_two = Fabricate(:queue_item, position: 2)
-        post :order, queue_items: [{id: queue_item_one.id, position: 2}, {id: queue_item_two.id, position: 1}]
-        expect(signed_in_user.queue_items).to eq([queue_item_two, queue_item_one])
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2}, {id: @queue_item_two.id, position: 1}]
+        expect(signed_in_user.queue_items).to eq([@queue_item_two.reload, @queue_item_one.reload])
       end
-      it "normalizes the position numbers"
+
+      it "normalizes the position numbers" do 
+        post :order, queue_items: [{id: @queue_item_one.id, position: 3}, {id: @queue_item_two.id, position: 4}]
+        expect(signed_in_user.queue_items.map(&:position)).to eq([1, 2])
+      end
     end
-    context "with invalid inputs"
+
+    context "with invalid inputs" do
+      let(:signed_in_user) { Fabricate(:user) }
+
+      before :each do
+        session[:user_id] = signed_in_user.id
+        @queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
+        @queue_item_two = Fabricate(:queue_item, user: signed_in_user, position: 2)
+      end
+
+      it "redirects to my queue page" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2.5}, {id: @queue_item_two.id, position: 1}]
+        expect(response).to redirect_to my_queue_path
+      end
+
+      it "sets the flash[:danger] message" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2.5}, {id: @queue_item_two.id, position: 1}]
+        expect(flash[:danger]).to be_present
+      end
+
+      it "does not change the queue items"
+    end
+
     context "with unauthenticated users"
     context "with queue items that do not belong to the current user"
   end
