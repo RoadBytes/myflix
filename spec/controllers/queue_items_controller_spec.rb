@@ -37,6 +37,13 @@ describe QueueItemsController do
         expect(response).to redirect_to my_queue_path
       end
 
+      it "normalizes the queue when an item is deleted" do
+        queue_item_one.position = 1
+        queue_item_two.position = 2
+        delete :destroy, id: queue_item_one.id
+        expect(queue_item_two.reload.position).to eq(1)
+      end
+
       it "does not delete non current_user queue items" do
         non_signed_in_user = Fabricate(:user)
         non_signed_in_user_queue_item = Fabricate(:queue_item, user: non_signed_in_user)
@@ -135,10 +142,27 @@ describe QueueItemsController do
         expect(flash[:danger]).to be_present
       end
 
-      it "does not change the queue items"
+      it "does not change the queue items" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 3}, {id: @queue_item_two.id, position: 2.1}]
+        expect(@queue_item_one.reload.position).to eq(1)
+      end
     end
 
-    context "with unauthenticated users"
-    context "with queue items that do not belong to the current user"
+    context "with unauthenticated users" do
+      it "redirects to the sign in path" do
+        post :order, queue_items: [{id: 1, position: 3}, {id: 2, position: 2}]
+        expect(response).to redirect_to root_path
+      end
+    end
+    context "with queue items that do not belong to the current user" do
+      it "does not change the queue items" do
+        signed_in_user = Fabricate(:user)
+        session[:user_id] = signed_in_user.id
+        queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
+        queue_item_two = Fabricate(:queue_item, position: 4)
+        post :order, queue_items: [{id: queue_item_one.id, position: 3}, {id: queue_item_two, position: 5}]
+        expect(queue_item_one.reload.position).to eq(1)
+      end
+    end
   end
 end
