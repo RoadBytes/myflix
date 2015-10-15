@@ -37,6 +37,13 @@ describe QueueItemsController do
         expect(response).to redirect_to my_queue_path
       end
 
+      it "normalizes the queue when an item is deleted" do
+        queue_item_one.position = 1
+        queue_item_two.position = 2
+        delete :destroy, id: queue_item_one.id
+        expect(queue_item_two.reload.position).to eq(1)
+      end
+
       it "does not delete non current_user queue items" do
         non_signed_in_user = Fabricate(:user)
         non_signed_in_user_queue_item = Fabricate(:queue_item, user: non_signed_in_user)
@@ -71,7 +78,7 @@ describe QueueItemsController do
       end
 
       it "sets queue_item list position to last value" do
-        4.times {Fabricate(:queue_item, user: authenticated_user)}
+        4.times { |count| Fabricate(:queue_item, user: authenticated_user, position: count + 1) }
         post :create, video: @queue_item_one.video
         expect(authenticated_user.queue_items.last.position).to eq 5
       end
@@ -87,6 +94,75 @@ describe QueueItemsController do
     it "redirects unauthenticated user to root path" do
       post :create
       expect(response).to redirect_to root_path
+    end
+  end
+
+  describe "POST #order" do
+    context "with valid inputs" do
+      let(:signed_in_user) { Fabricate(:user) }
+
+      before :each do
+        session[:user_id] = signed_in_user.id
+        @queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
+        @queue_item_two = Fabricate(:queue_item, user: signed_in_user, position: 2)
+      end
+
+      it "redirects to the my queue page" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2}, {id: @queue_item_two.id, position: 1}]
+        expect(response).to redirect_to my_queue_path
+      end
+
+      it "reorders the queue items" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2}, {id: @queue_item_two.id, position: 1}]
+        expect(signed_in_user.queue_items).to eq([@queue_item_two.reload, @queue_item_one.reload])
+      end
+
+      it "normalizes the position numbers" do 
+        post :order, queue_items: [{id: @queue_item_one.id, position: 3}, {id: @queue_item_two.id, position: 4}]
+        expect(signed_in_user.queue_items.map(&:position)).to eq([1, 2])
+      end
+    end
+
+    context "with invalid inputs" do
+      let(:signed_in_user) { Fabricate(:user) }
+
+      before :each do
+        session[:user_id] = signed_in_user.id
+        @queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
+        @queue_item_two = Fabricate(:queue_item, user: signed_in_user, position: 2)
+      end
+
+      it "redirects to my queue page" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2.5}, {id: @queue_item_two.id, position: 1}]
+        expect(response).to redirect_to my_queue_path
+      end
+
+      it "sets the flash[:danger] message" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 2.5}, {id: @queue_item_two.id, position: 1}]
+        expect(flash[:danger]).to be_present
+      end
+
+      it "does not change the queue items" do
+        post :order, queue_items: [{id: @queue_item_one.id, position: 3}, {id: @queue_item_two.id, position: 2.1}]
+        expect(@queue_item_one.reload.position).to eq(1)
+      end
+    end
+
+    context "with unauthenticated users" do
+      it "redirects to the sign in path" do
+        post :order, queue_items: [{id: 1, position: 3}, {id: 2, position: 2}]
+        expect(response).to redirect_to root_path
+      end
+    end
+    context "with queue items that do not belong to the current user" do
+      it "does not change the queue items" do
+        signed_in_user = Fabricate(:user)
+        session[:user_id] = signed_in_user.id
+        queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
+        queue_item_two = Fabricate(:queue_item, position: 4)
+        post :order, queue_items: [{id: queue_item_one.id, position: 3}, {id: queue_item_two, position: 5}]
+        expect(queue_item_one.reload.position).to eq(1)
+      end
     end
   end
 end

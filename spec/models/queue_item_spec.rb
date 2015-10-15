@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe QueueItem do
+  it { should validate_numericality_of(:position).only_integer }
+
   describe "#user_rating" do
     it "returns user's rating of video if review exists" do
       rating_user  = Fabricate(:user)
