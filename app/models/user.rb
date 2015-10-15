@@ -19,4 +19,10 @@ class User < ActiveRecord::Base
   def position_assignment
     queue_items.size + 1
   end
+
+  def normalize_queue_positions
+    queue_items.each_with_index do |queue_item, index|
+      queue_item.update_attributes( position: index + 1 )
+    end
+  end
 end
