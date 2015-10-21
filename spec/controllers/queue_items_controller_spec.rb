@@ -4,16 +4,15 @@ describe QueueItemsController do
   describe "GET #index" do
     it "sets @queue_items for authenticated user" do
       signed_in_user = Fabricate(:user)
-      session[:user_id] = signed_in_user.id
+      set_current_user signed_in_user
       queue_item_one    = Fabricate(:queue_item, user: signed_in_user)
       queue_item_two    = Fabricate(:queue_item, user: signed_in_user)
       get :index
       expect(assigns(:queue_items)).to match_array([queue_item_one, queue_item_two])
     end
 
-    it "redirects to root_path for unauthenticated user" do
-      get :index
-      expect(response).to redirect_to root_path
+    it_behaves_like "require_sign_in" do
+      let(:action) { get :index }
     end
   end
 
@@ -24,7 +23,7 @@ describe QueueItemsController do
 
     context "Authenticated User" do
       before :each do
-        session[:user_id] = picky_user.id
+        set_current_user picky_user
       end
 
       it "removes the associated item from the user's queue" do
