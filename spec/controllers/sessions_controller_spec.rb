@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SessionsController do
   describe "GET #new" do
     it "redirects to home_path if there's a current_user" do
-      session[:user_id] = Fabricate(:user)
+      set_current_user
       get :new
       expect(response).to redirect_to home_path 
     end
@@ -51,7 +51,7 @@ describe SessionsController do
 
   describe "DELETE #destroy" do
     before :each do
-      session[:user_id] = Fabricate(:user).id
+      set_current_user
       delete :destroy
     end
 
