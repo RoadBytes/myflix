@@ -51,48 +51,44 @@ describe QueueItemsController do
       end
     end
 
-    it "redirects to root_path for unauthenticated users" do
-      delete :destroy, id: queue_item_one.id
-      expect(response).to redirect_to root_path
+    it_behaves_like "require_sign_in" do
+      let(:action) { delete :destroy, id: queue_item_one.id }
     end
   end
 
   describe "POST #create" do
     let(:authenticated_user) { Fabricate(:user) }
 
-    context "Authenticated User" do
-      before :each do
-        session[:user_id] = authenticated_user.id
-        @queue_item_one = QueueItem.new(user: authenticated_user)
-      end
-
-      it "adds item to current_users queue items" do
-        post :create, video: @queue_item_one.video
-        expect(QueueItem.count).to eq 1
-      end
-
-      it "redirects to /my_queue" do
-        post :create, video: @queue_item_one.video
-        expect(response).to redirect_to my_queue_path
-      end
-
-      it "sets queue_item list position to last value" do
-        4.times { |count| Fabricate(:queue_item, user: authenticated_user, position: count + 1) }
-        post :create, video: @queue_item_one.video
-        expect(authenticated_user.queue_items.last.position).to eq 5
-      end
-
-      it "does not add video to queue if it's already in queue" do
-        @queue_item_one.save
-        video = @queue_item_one.video
-        post :create, video: @queue_item_one.video
-        expect(QueueItem.count).to eq 1
-      end
+    before :each do
+      set_current_user authenticated_user
+      @queue_item_one = QueueItem.new(user: authenticated_user)
     end
 
-    it "redirects unauthenticated user to root path" do
-      post :create
-      expect(response).to redirect_to root_path
+    it "adds item to current_users queue items" do
+      post :create, video: @queue_item_one.video
+      expect(QueueItem.count).to eq 1
+    end
+
+    it "redirects to /my_queue" do
+      post :create, video: @queue_item_one.video
+      expect(response).to redirect_to my_queue_path
+    end
+
+    it "sets queue_item list position to last value" do
+      4.times { |count| Fabricate(:queue_item, user: authenticated_user, position: count + 1) }
+      post :create, video: @queue_item_one.video
+      expect(authenticated_user.queue_items.last.position).to eq 5
+    end
+
+    it "does not add video to queue if it's already in queue" do
+      @queue_item_one.save
+      video = @queue_item_one.video
+      post :create, video: @queue_item_one.video
+      expect(QueueItem.count).to eq 1
+    end
+
+    it_behaves_like "require_sign_in" do
+      let(:action) { post :create }
     end
   end
 
@@ -101,7 +97,7 @@ describe QueueItemsController do
       let(:signed_in_user) { Fabricate(:user) }
 
       before :each do
-        session[:user_id] = signed_in_user.id
+        set_current_user signed_in_user
         @queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
         @queue_item_two = Fabricate(:queue_item, user: signed_in_user, position: 2)
       end
@@ -126,7 +122,7 @@ describe QueueItemsController do
       let(:signed_in_user) { Fabricate(:user) }
 
       before :each do
-        session[:user_id] = signed_in_user.id
+        set_current_user signed_in_user
         @queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
         @queue_item_two = Fabricate(:queue_item, user: signed_in_user, position: 2)
       end
@@ -147,16 +143,13 @@ describe QueueItemsController do
       end
     end
 
-    context "with unauthenticated users" do
-      it "redirects to the sign in path" do
-        post :order, queue_items: [{id: 1, position: 3}, {id: 2, position: 2}]
-        expect(response).to redirect_to root_path
-      end
+    it_behaves_like "require_sign_in" do
+      let(:action) { post :order, queue_items: [{id: 1, position: 3}, {id: 2, position: 2}] }
     end
     context "with queue items that do not belong to the current user" do
       it "does not change the queue items" do
         signed_in_user = Fabricate(:user)
-        session[:user_id] = signed_in_user.id
+        set_current_user = signed_in_user
         queue_item_one = Fabricate(:queue_item, user: signed_in_user, position: 1)
         queue_item_two = Fabricate(:queue_item, position: 4)
         post :order, queue_items: [{id: queue_item_one.id, position: 3}, {id: queue_item_two, position: 5}]
