@@ -1,69 +1,66 @@
 require 'spec_helper'
 
+
 describe ReviewsController do
   describe "POST #create" do
+    let(:current_user) { Fabricate(:user)}
     let(:video)        { Fabricate(:video) }
-    let(:current_user) { Fabricate(:user) }
 
-    context "with authenticated user" do
-      context "valid input" do
+    context "valid input" do
 
-        before :each do
-          session[:user_id] = current_user.id
-          post :create, video_id: video.id, review: { message: "Sweet!", rating: "4" }
-        end
-
-        it "saves @review to database" do
-          expect(Review.count).to eq 1
-        end
-
-        it "redirects to video#show" do
-          expect(response).to redirect_to video_path(video)
-        end
-
-        it "has flash[:success] message" do
-          expect(flash[:success]).to_not be nil
-        end
+      before :each do
+        set_current_user current_user
+        post :create, video_id: video.id, review: { message: "Sweet!", rating: "4" }
       end
 
-      context "with invalid input" do
+      it "saves @review to database" do
+        expect(Review.count).to eq 1
+      end
 
-        before :each do
-          session[:user_id] = current_user.id
-          post :create, video_id: video.id, review: { message: "", rating: "4" }
-        end
+      it "redirects to video#show" do
+        expect(response).to redirect_to video_path(video)
+      end
 
-        it "redirects to show/video template" do
-          expect(response).to render_template "videos/show"
-        end
-
-        it "does not save @review to database" do
-          expect(Review.count).to eq 0
-        end
-
-        it "sets @review instance" do
-          expect(assigns(:review)).to be_instance_of(Review)
-        end
-
-        it "sets @video instance" do
-          expect(assigns(:video)).to be_instance_of(Video)
-        end
-
-        it "@review instance has errors when input is invalid" do
-          expect(assigns(:review).errors.size).to be > 0
-        end
-
-        it "has flash[:danger] message" do
-          expect(flash[:danger]).to_not be nil
-        end
+      it "has flash[:success] message" do
+        expect(flash[:success]).to_not be nil
       end
     end
 
-    context "with an unauthenticated User" do
-      it "redirects the user to the front page" do
-        post :create, video_id: video.id
-        expect(response).to redirect_to root_path
+    context "with invalid input" do
+
+      before :each do
+        set_current_user current_user
+        post :create, video_id: video.id, review: { message: "", rating: "4" }
       end
+
+      it "redirects to show/video template" do
+        expect(response).to render_template "videos/show"
+      end
+
+      it "does not save @review to database" do
+        expect(Review.count).to eq 0
+      end
+
+      it "sets @review instance" do
+        expect(assigns(:review)).to be_instance_of(Review)
+      end
+
+      it "sets @video instance" do
+        expect(assigns(:video)).to be_instance_of(Video)
+      end
+
+      it "@review instance has errors when input is invalid" do
+        expect(assigns(:review).errors.size).to be > 0
+      end
+
+      it "has flash[:danger] message" do
+        expect(flash[:danger]).to_not be nil
+      end
+
+    end
+
+    it_behaves_like "require_sign_in" do
+      let(:action) { post :create, video_id: video.id }
     end
   end
 end

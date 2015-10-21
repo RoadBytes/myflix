@@ -21,7 +21,7 @@ describe UsersController do
       it "redirects to home_path with valid input" do
         expect(response).to redirect_to home_path
       end
-    end
+   end
 
     context "with invalid input" do
       before :each do
