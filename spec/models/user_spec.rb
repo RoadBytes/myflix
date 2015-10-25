@@ -20,4 +20,18 @@ describe User do
     end
   end
 
+  describe ".queued_video?" do
+    it "returns false if video is not in user's queue" do
+      video = Fabricate(:video)
+      user  = Fabricate(:user)
+      expect(user.queued_video? video).to eq false
+    end
+
+    it "returns true if video is in user's queue" do
+      video      = Fabricate(:video)
+      user       = Fabricate(:user)
+      queue_item = Fabricate(:queue_item, user: user, video: video)
+      expect(user.queued_video? video).to eq true
+    end
+  end
 end

@@ -7,7 +7,7 @@ class QueueItemsController < ApplicationController
 
   def create
     video = Video.find_by id: params[:video]
-    unless current_user.my_queue_contains?(video)
+    unless current_user.queued_video?(video)
       QueueItem.create(user:  current_user,
                        video: video,
                        position: current_user.position_assignment)
