@@ -10,32 +10,47 @@ feature "user adds to my_queue and changes order" do
 
     sign_in_user user
 
-    find("a[href='/videos/#{monk.id}']").click
-    expect(page).to have_content monk.title
+    visit_video_page_of monk
 
-    click_on '+ My Queue'
-    expect(page).to have_content monk.title
+    check_my_queue_button_disappears monk
 
-    click_link monk.title
-    expect(page.find(:css, "div.video_info > header > h3").text).to have_content monk.title
-    expect(page).not_to have_content '+ My Queue'
+    place_in_queue south_park
+    place_in_queue huck
 
-    visit home_path
-    find("a[href='/videos/#{south_park.id}']").click
-    click_on '+ My Queue'
-
-    visit home_path
-    find("a[href='/videos/#{huck.id}']").click
-    click_on '+ My Queue'
-
-    fill_in "video_#{monk.id}",       with: 3
-    fill_in "video_#{south_park.id}", with: 1
-    fill_in "video_#{huck.id}",       with: 2
+    change_queue_position monk,       3
+    change_queue_position south_park, 1
+    change_queue_position huck,       2
 
     click_button "Update Instant Queue"
 
-    expect(find("#video_#{south_park.id}").value).to eq "1"
-    expect(find("#video_#{huck.id}").value).to       eq "2"
-    expect(find("#video_#{monk.id}").value).to       eq "3"
+    expect_video_position south_park, "1"
+    expect_video_position huck,       "2"
+    expect_video_position monk,       "3"
+  end
+
+  def visit_video_page_of video
+    find("a[href='/videos/#{video.id}']").click
+    expect(page).to have_content video.title
+  end
+
+  def place_in_queue video
+    visit home_path
+    find("a[href='/videos/#{video.id}']").click
+    click_on '+ My Queue'
+  end
+
+  def check_my_queue_button_disappears video
+    click_on '+ My Queue'
+    click_link video.title
+    expect(page.find(:css, "div.video_info > header > h3").text).to have_content video.title
+    expect(page).not_to have_content '+ My Queue'
+  end
+
+  def change_queue_position video, value
+    fill_in "video_#{video.id}", with: value
+  end
+
+  def expect_video_position video, value
+    expect(find("#video_#{video.id}").value).to eq value
   end
 end
