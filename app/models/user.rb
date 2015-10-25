@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_secure_password 
 
 
-  def my_queue_contains?(video)
+  def queued_video?(video)
     queue_items.map{|queue_item| queue_item.video }.include?(video)
   end
 
