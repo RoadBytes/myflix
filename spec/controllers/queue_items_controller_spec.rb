@@ -139,13 +139,14 @@ describe QueueItemsController do
 
       it "does not change the queue items" do
         post :order, queue_items: [{id: @queue_item_one.id, position: 3}, {id: @queue_item_two.id, position: 2.1}]
-        expect(@queue_item_one.reload.position).to eq(1)
+        expect(signed_in_user.queue_items.first).to eq(@queue_item_one)
       end
     end
 
     it_behaves_like "require_sign_in" do
       let(:action) { post :order, queue_items: [{id: 1, position: 3}, {id: 2, position: 2}] }
     end
+
     context "with queue items that do not belong to the current user" do
       it "does not change the queue items" do
         signed_in_user = Fabricate(:user)
