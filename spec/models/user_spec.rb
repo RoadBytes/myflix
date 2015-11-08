@@ -7,6 +7,7 @@ describe User do
   it { validate_presence_of(:password) }
   it { validate_length_of(:password).is_at_least(6) }
   it { should have_many(:queue_items).order(:position) }
+  it { should have_many(:reviews).order("created_at DESC") }
 
   describe "#authenticate" do
     it "should return object when password is correct" do

@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   validates :password,  presence:   true,
                         length:     { minimum: 6 },
                         if:         lambda{ new_record? || !password.nil? }
-  has_many  :reviews
+  has_many  :reviews,     -> { order("created_at DESC") }
   has_many  :queue_items, -> { order(:position) }
 
   has_secure_password 
