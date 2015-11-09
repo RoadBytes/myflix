@@ -6,7 +6,7 @@ feature "user adds to my_queue and changes order" do
     monk       = Fabricate(:video, title: "Monk", category: comedies)
     south_park = Fabricate(:video, title: "South Park", category: comedies)
     huck       = Fabricate(:video, title: "Huck", category: comedies)
-    user       = User.create(full_name: "Yo Yo", email: "yo@test.com", password: "123456")
+    user       = Fabricate(:user,  full_name: "Yo Yo", email: "yo@test.com", password: "123456")
 
     sign_in_user user
 
