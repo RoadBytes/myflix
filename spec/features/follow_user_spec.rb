@@ -5,12 +5,10 @@ feature "user follows and unfollows user" do
     comedies = Fabricate(:category)
     monk     = Fabricate(:video, title: "Monk", category: comedies)
 
-    user     = Fabricate(:user, full_name: "Yo Yo", email: "yo@test.com", password: "123456")
     leader   = Fabricate(:user, full_name: "Leader Joe", email: "leader_yo@test.com", password: "123456")
-
     review   = Fabricate(:review, user: leader, video: monk)
 
-    sign_in_user user
+    sign_in_user
 
     visit_video_page_of monk
     click_on_profile_link_of leader
