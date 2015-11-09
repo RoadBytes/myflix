@@ -49,7 +49,7 @@ describe UsersController do
 
     it "sets @user" do
       user = Fabricate(:user)
-      sign_in_user user
+      set_current_user user
       get :show, id: user.id
       expect(assigns(:user)).to eq user
     end
