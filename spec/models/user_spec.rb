@@ -21,7 +21,7 @@ describe User do
     end
   end
 
-  describe "#is_a_leader?(user)"do
+  describe "#is_following?(user)"do
     let( :self_user )   { Fabricate(:user) }
     let( :leader_user ) { Fabricate(:user) }
 
