@@ -29,4 +29,12 @@ class User < ActiveRecord::Base
       queue_item.update_attributes( position: index + 1 )
     end
   end
+
+  def is_following?(user)
+    leader_relationships.any? {|relationship| user == relationship.leader }
+  end
+
+  def can_follow?(user)
+    (self == user || self.is_following?(user)) ? false : true
+  end
 end
