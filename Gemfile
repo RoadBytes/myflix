@@ -37,6 +37,7 @@ group :test do
 end
 
 group :production do
+  gem "faker", "~> 1.1.2"
   gem 'rails_12factor'
 end
 
