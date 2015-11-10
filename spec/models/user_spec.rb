@@ -55,7 +55,7 @@ describe User do
     end
   end
 
-  describe ".queued_video?" do
+  describe "#queued_video?" do
     let( :video ) { Fabricate(:video) }
     let( :user )  { Fabricate(:user) }
 
