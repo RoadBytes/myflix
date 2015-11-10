@@ -24,6 +24,7 @@ group :development, :test do
   gem 'rspec-rails', '2.99'
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'fabrication'
+  gem 'letter_opener'
 end
 
 group :test do
