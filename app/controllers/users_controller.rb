@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      AppMailer.notify_on_new_todo(@user, @user).deliver
+      AppMailer.welcome_user(@user).deliver
       flash[:success] = "Welcome, you are now registered"
       session[:user_id] = @user.id
       redirect_to home_path
