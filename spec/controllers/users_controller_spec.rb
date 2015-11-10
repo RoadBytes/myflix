@@ -21,7 +21,21 @@ describe UsersController do
       it "redirects to home_path with valid input" do
         expect(response).to redirect_to home_path
       end
-   end
+
+      it "sends out the email" do
+        ActionMailer::Base.deliveries.should_not be_empty
+      end
+      
+      it "sends email to the right recipient" do
+        message = ActionMailer::Base.deliveries.last
+        expect(message.to).to eq ["email@email.com"]
+      end
+
+      it "email the right content" do
+        message = ActionMailer::Base.deliveries.last
+        expect(message.body).to include("Welcome to MyFlix Joe Joe")
+      end
+    end
 
     context "with invalid input" do
       before :each do
@@ -38,6 +52,10 @@ describe UsersController do
 
       it "sets @user with invalid data" do
         expect(assigns(:user)).to be_instance_of(User)
+      end
+      
+      it "does not send out the email" do
+        ActionMailer::Base.deliveries.should be_empty
       end
     end
   end
