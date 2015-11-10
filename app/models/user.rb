@@ -35,6 +35,6 @@ class User < ActiveRecord::Base
   end
 
   def can_follow?(user)
-    (self == user || self.is_following?(user)) ? false : true
+    !(self == user || self.is_following?(user))
   end
 end

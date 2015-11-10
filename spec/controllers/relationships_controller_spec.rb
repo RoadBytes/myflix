@@ -26,9 +26,8 @@ describe RelationshipsController do
       let(:user)       { Fabricate(:user) }
       let(:leader_one) { Fabricate(:user) }
 
-      before(:each) do
-        set_current_user user
-      end
+      before(:each) { set_current_user user }
+
       it "redirects to people_path" do
         relationships = Fabricate(:relationship, follower: user, leader: leader_one)
         delete :destroy, id: relationships
