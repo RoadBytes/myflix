@@ -38,9 +38,9 @@ describe UsersController do
     end
 
     context "with invalid input" do
-      before :each do
-        post :create, user: {full_name: "Joe Joe", email: "", password: "123456"}
-      end
+      before(:each) { post :create, user: {full_name: "Joe Joe", email: "", password: "123456"}}
+
+      after(:each) { ActionMailer::Base.deliveries.clear }
 
       it "does not save to database" do
         expect(User.count).to eq 0
@@ -55,7 +55,7 @@ describe UsersController do
       end
       
       it "does not send out the email" do
-        ActionMailer::Base.deliveries.should be_empty
+        expect(ActionMailer::Base.deliveries).to be_empty
       end
     end
   end
