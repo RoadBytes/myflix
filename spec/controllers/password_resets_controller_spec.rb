@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PasswordResetsController do
 
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:user, token: "12345") }
 
   describe "GET show" do
     context "with valid token" do
@@ -26,7 +26,6 @@ describe PasswordResetsController do
   describe "POST create" do
     context 'with valid token' do
       before(:each) do
-        @original_token = user.token
         post :create, token: user.token, password: "123456"
       end
 
@@ -42,8 +41,8 @@ describe PasswordResetsController do
         expect(flash[:success]).to be_present
       end
 
-      it "regenerate the user's token" do
-        expect(user.reload.token).to_not eq @original_token
+      it "removes the user's token" do
+        expect(user.reload.token.blank?).to eq true
       end
     end
 

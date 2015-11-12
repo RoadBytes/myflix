@@ -36,6 +36,10 @@ describe ForgotPasswordsController do
       it "sends an email to user's email" do
         expect(ActionMailer::Base.deliveries.last.to).to eq [user.email]
       end
+
+      it "sets user's token attribute to a string value" do
+        expect(user.reload.token.blank?).to_not eq true
+      end
     end
   end
 end

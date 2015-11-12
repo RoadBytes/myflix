@@ -4,6 +4,8 @@ class ForgotPasswordsController < ApplicationController
     user  = User.find_by(email: email)
 
     if user
+      user.generate_token
+      user.save
       AppMailer.send_forgot_password(user).deliver
       redirect_to forgot_password_confirmation_path
     else

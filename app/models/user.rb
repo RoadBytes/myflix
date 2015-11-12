@@ -14,8 +14,6 @@ class User < ActiveRecord::Base
 
   has_secure_password 
 
-  before_create :generate_token
-
   def queued_video?(video)
     queue_items.map{|queue_item| queue_item.video }.include?(video)
   end
@@ -40,5 +38,9 @@ class User < ActiveRecord::Base
 
   def generate_token
     self.token = SecureRandom.urlsafe_base64
+  end
+
+  def clear_token
+    self.token = nil
   end
 end

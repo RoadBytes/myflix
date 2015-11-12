@@ -13,7 +13,7 @@ class PasswordResetsController < ApplicationController
     user = User.find_by(token: params[:token])
     if user
       user.password = params[:password]
-      user.generate_token
+      user.clear_token
       user.save
       flash[:success] = "New Password has been set"
       redirect_to signin_path
