@@ -10,9 +10,11 @@ describe UsersController do
 
   describe "POST #create" do
     context "with valid input" do
-      before :each do
+      before(:each) do
         post :create, user: {full_name: "Joe Joe", email: "email@email.com", password: "123456"}
       end
+
+      after(:each) { ActionMailer::Base.deliveries.clear }
 
       it "saves @user to db with valid input" do
         expect(User.count).to eq 1

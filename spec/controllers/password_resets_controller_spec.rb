@@ -21,6 +21,11 @@ describe PasswordResetsController do
       get :show, id: 'invalidtoken'
       expect(response).to redirect_to invalid_token_path
     end
+
+    it "redirects expired token template if token blank" do
+      get :show, id: ''
+      expect(response).to redirect_to invalid_token_path
+    end
   end
 
   describe "POST create" do
