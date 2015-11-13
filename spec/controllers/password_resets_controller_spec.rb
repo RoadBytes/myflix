@@ -29,7 +29,7 @@ describe PasswordResetsController do
   end
 
   describe "POST create" do
-    context 'with valid token' do
+    context 'with valid token and password' do
       before(:each) do
         post :create, token: user.token, password: "123456"
       end
@@ -48,6 +48,14 @@ describe PasswordResetsController do
 
       it "removes the user's token" do
         expect(user.reload.token.blank?).to eq true
+      end
+
+    end
+
+    context "with valid token and invalid password" do
+      it "redirects to new if password is not valid" do
+        post :create, token: user.token, password: "badpw"
+        expect(response).to render_template :show
       end
     end
 

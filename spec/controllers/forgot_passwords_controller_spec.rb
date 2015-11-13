@@ -3,24 +3,26 @@ require 'spec_helper'
 describe ForgotPasswordsController do
   describe "POST create" do
     context "with blank email" do
-      before(:each) { post :create, email: "" }
       it "redirects to new" do
+        post :create, email: ""
         expect(response).to redirect_to forgot_password_path
       end
 
       it "sets flash[:danger] to blank error message" do
-        expect(flash[:danger]).to eq 'Email cannot be blank'
+        post :create, email: ""
+        expect(flash[:danger]).to be_present
       end
     end
 
     context "with email not in database" do
-      before(:each) { post :create, email: "not_in@db.com" }
       it "redirects to new" do
+        post :create, email: "not_in@db.com"
         expect(response).to redirect_to forgot_password_path
       end
 
       it "sets flash[:danger] missing error message" do
-        expect(flash[:danger]).to eq 'Email not found'
+        post :create, email: "not_in@db.com"
+        expect(flash[:danger]).to be_present
       end
     end
 
