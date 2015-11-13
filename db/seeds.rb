@@ -58,4 +58,4 @@ joe = User.create!(email:     "test@test.com",
                  video:   monk)
 end
 
-QueueItem.create!(user: joe, video: monk)
+QueueItem.create!(user: joe, video: monk, position: 1)

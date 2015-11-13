@@ -12,9 +12,7 @@ class User < ActiveRecord::Base
   has_many :leader_relationships,   class_name: "Relationship", foreign_key: :follower_id
   has_many :follower_relationships, class_name: "Relationship", foreign_key: :leader_id
 
-
   has_secure_password 
-
 
   def queued_video?(video)
     queue_items.map{|queue_item| queue_item.video }.include?(video)
@@ -36,5 +34,9 @@ class User < ActiveRecord::Base
 
   def can_follow?(user)
     !(self == user || self.is_following?(user))
+  end
+
+  def generate_token
+    self.token = SecureRandom.urlsafe_base64
   end
 end

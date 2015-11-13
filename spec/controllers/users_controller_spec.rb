@@ -10,9 +10,11 @@ describe UsersController do
 
   describe "POST #create" do
     context "with valid input" do
-      before :each do
+      before do
         post :create, user: {full_name: "Joe Joe", email: "email@email.com", password: "123456"}
       end
+
+      after { ActionMailer::Base.deliveries.clear }
 
       it "saves @user to db with valid input" do
         expect(User.count).to eq 1
@@ -21,12 +23,24 @@ describe UsersController do
       it "redirects to home_path with valid input" do
         expect(response).to redirect_to home_path
       end
-   end
+
+      it "sends out the email" do
+        ActionMailer::Base.deliveries.should_not be_empty
+      end
+      
+      it "sends email to the right recipient" do
+        message = ActionMailer::Base.deliveries.last
+        expect(message.to).to eq ["email@email.com"]
+      end
+
+      it "email the right content" do
+        message = ActionMailer::Base.deliveries.last
+        expect(message.body).to include("Welcome to MyFlix Joe Joe")
+      end
+    end
 
     context "with invalid input" do
-      before :each do
-        post :create, user: {full_name: "Joe Joe", email: "", password: "123456"}
-      end
+      before { post :create, user: {full_name: "Joe Joe", email: "", password: "123456"}}
 
       it "does not save to database" do
         expect(User.count).to eq 0
@@ -38,6 +52,10 @@ describe UsersController do
 
       it "sets @user with invalid data" do
         expect(assigns(:user)).to be_instance_of(User)
+      end
+      
+      it "does not send out the email" do
+        expect(ActionMailer::Base.deliveries).to be_empty
       end
     end
   end
