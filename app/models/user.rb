@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include Tokenable
 
   validates :full_name, presence:   true
   validates :email,     presence:   true,
@@ -36,7 +37,10 @@ class User < ActiveRecord::Base
     !(self == user || self.is_following?(user))
   end
 
-  def generate_token
-    self.token = SecureRandom.urlsafe_base64
+  def follow leader
+    if self.can_follow? leader
+      Relationship.create(leader_id:   leader.id, 
+                          follower_id: self.id)
+    end
   end
 end

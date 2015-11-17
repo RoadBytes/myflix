@@ -8,14 +8,18 @@ Myflix::Application.routes.draw do
   resources :forgot_passwords, only: [:create] 
 
   resources :password_resets, only: [:show, :create]
-  get 'invalid_token' => 'password_resets#invalid_token'
+  get 'invalid_token' => 'pages#invalid_token'
+
+  resources :invitations, only: [:new, :create]
 
   get    'signin'  => 'sessions#new'
   post   'signin'  => 'sessions#create'
   delete 'signout' => 'sessions#destroy'
 
   get  '/home'     => 'videos#index'
-  get  '/register' => 'users#new'
+
+  get  '/register'        => 'users#new'
+  get  '/register/:token' => 'users#new_with_invitation_token', as: 'register_with_token'
 
   get  '/my_queue' => 'queue_items#index'
   post '/my_queue' => 'queue_items#order'

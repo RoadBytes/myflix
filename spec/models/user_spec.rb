@@ -68,4 +68,19 @@ describe User do
       expect(user.queued_video? video).to eq true
     end
   end
+
+  describe "#follow" do
+    it "follows another user" do
+      alice = Fabricate(:user)
+      joe   = Fabricate(:user)
+      joe.follow alice
+      expect(joe.reload.is_following? alice).to eq true
+    end
+
+    it "it does not follow one's self" do
+      joe   = Fabricate(:user)
+      joe.follow joe
+      expect(joe.reload.is_following? joe).to eq false
+    end
+  end
 end

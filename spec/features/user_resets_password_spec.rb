@@ -3,7 +3,6 @@ require "spec_helper"
 feature "user resets forgotten password" do
   background do
     @user = Fabricate(:user, email: "test@test.com", full_name: "Joe Joe")
-    clear_emails
   end
 
   scenario "successfuly" do
@@ -25,5 +24,7 @@ feature "user resets forgotten password" do
     fill_in :password, with: "1234567"
     click_button "Sign in"
     expect(page).to have_content "Welcome my child"
+
+    clear_emails
   end
 end
