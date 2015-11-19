@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
     !(self == user || self.is_following?(user))
   end
 
-  def follow leader
+  def follow(leader)
     if self.can_follow? leader
       Relationship.create(leader_id:   leader.id, 
                           follower_id: self.id)

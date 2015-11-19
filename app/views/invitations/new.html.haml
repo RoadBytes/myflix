@@ -6,7 +6,7 @@
           %h1 Invite a friend to join MyFlix!
         %fieldset
           = f.text_field :recipient_name, label: "Friend's Name"
-          = f.text_field :recipient_email, label: "Friend's Email"
+          = f.email_field :recipient_email, label: "Friend's Email"
           = f.text_area  :message, rows: 6, 
                          value: "Please join this really cool site!"
         %fieldset.form-group.action

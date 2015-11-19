@@ -8,6 +8,6 @@ end
 
 shared_examples "tokenable" do
   it "generates a random token with the object is created" do
-    expect(object.token).to be_present
+    expect(object.reload.token).to be_present
   end
 end

@@ -1,5 +1,3 @@
-require 'faker'
-
 Fabricator(:review) do
   rating     { Random::rand(5) }
   message    { Faker::Lorem.sentences(2).join(" ") }

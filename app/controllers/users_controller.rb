@@ -50,7 +50,7 @@ class UsersController < ApplicationController
       inviter = User.find_by id: invitation.inviter_id
       @user.follow   inviter
       inviter.follow @user
-      invitation.update_attributes(token: nil)
+      invitation.remove_token
     end
   end
 end
