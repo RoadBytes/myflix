@@ -31,6 +31,10 @@ describe ForgotPasswordsController do
 
       before(:each) { post :create, email: user.email }
 
+      it_behaves_like "tokenable" do
+        let(:object) { user }
+      end
+
       it "redirects to the forgot password confirmation" do
         expect(response).to redirect_to forgot_password_confirmation_path
       end

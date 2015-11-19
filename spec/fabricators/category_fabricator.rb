@@ -1,5 +1,3 @@
-require 'faker'
-
 Fabricator(:category) do
   name           "TV Comedies"
   created_at      Time.now

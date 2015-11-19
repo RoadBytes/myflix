@@ -8,8 +8,35 @@ describe UsersController do
     end
   end
 
+  describe "GET #new_with_invitation_token" do
+    context "with valid token" do
+      it "sets @user with recipient email" do
+        invitation =  Fabricate(:invitation, token: "12345")
+        get :new_with_invitation_token, token: "12345"
+        expect(assigns(:user).email).to eq invitation.recipient_email
+      end
+
+      it "sets @invitation_token with invitation.token" do
+        invitation =  Fabricate(:invitation, token: "12345")
+        get :new_with_invitation_token, token: "12345"
+        expect(assigns(:invitation_token)).to eq invitation.token
+      end
+
+      it "renders to :new" do
+        invitation =  Fabricate(:invitation, token: "12345")
+        get :new_with_invitation_token, token: "12345"
+        expect(response).to render_template :new
+      end
+    end
+
+    it "redirects to expired token page for invalid tokens" do
+      get :new_with_invitation_token, token: "12345"
+      expect(response).to redirect_to invalid_token_path
+    end
+  end
+
   describe "POST #create" do
-    context "with valid input" do
+    context "with valid input not from invitation" do
       before do
         post :create, user: {full_name: "Joe Joe", email: "email@email.com", password: "123456"}
       end
@@ -39,6 +66,34 @@ describe UsersController do
       end
     end
 
+    context "with valid input from invitation" do
+      before do
+        @alice      = Fabricate(:user)
+        @invitation = Fabricate(:invitation, inviter: @alice, 
+                               recipient_email: 'joe@example.com')
+        post :create, user: { email:     'joe@example.com', 
+                              full_name: 'Joe Doe',
+                              password:  '123456'},
+                      invitation_token: @invitation.token
+      end
+
+      after { ActionMailer::Base.deliveries.clear }
+
+      it "has user follow inviter" do
+        joe = User.find_by(email: 'joe@example.com')
+        expect(joe.is_following?(@alice)).to be true
+      end
+
+      it "has inviter follow user" do
+        joe = User.find_by(email: 'joe@example.com')
+        expect(@alice.is_following? joe).to be true
+      end
+
+      it "deletes invitation token upon acceptance" do
+        expect(@invitation.reload.token).to be_nil
+      end
+    end
+
     context "with invalid input" do
       before { post :create, user: {full_name: "Joe Joe", email: "", password: "123456"}}
 
@@ -46,7 +101,7 @@ describe UsersController do
         expect(User.count).to eq 0
       end
 
-      it "redirects to :new" do
+      it "renders :new template" do
         expect(response).to render_template :new
       end
 
