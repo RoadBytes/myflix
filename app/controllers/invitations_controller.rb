@@ -15,6 +15,7 @@ class InvitationsController < ApplicationController
       redirect_to new_invitation_path
     else
       flash[:danger] = "Invitation was NOT sent"
+      flash.now
       render :new
     end
   end
