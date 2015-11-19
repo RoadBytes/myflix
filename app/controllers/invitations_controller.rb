@@ -10,7 +10,7 @@ class InvitationsController < ApplicationController
     @invitation.generate_token
 
     if @invitation.save
-      AppMailer.send_invitation(@invitation).deliver
+      AppMailer.delay.send_invitation(@invitation)
       flash[:success] = "Invitation was sent!"
       redirect_to new_invitation_path
     else

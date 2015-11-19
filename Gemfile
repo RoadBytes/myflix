@@ -11,6 +11,8 @@ gem 'uglifier'
 gem 'jquery-rails'
 gem 'pg'
 gem 'bcrypt-ruby', '~> 3.1.2'
+gem 'sidekiq'
+gem 'unicorn'
 
 group :development, :test do
   gem 'pry'

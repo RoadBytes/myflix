@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     if @user.save
       handle_invitation invitation_token
 
-      AppMailer.welcome_user(@user).deliver
+      AppMailer.delay.welcome_user(@user)
       flash[:success] = "Welcome, you are now registered"
       session[:user_id] = @user.id
       redirect_to home_path
