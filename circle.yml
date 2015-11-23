@@ -1,0 +1,19 @@
+machine:
+  ruby:
+    version: 2.1.2
+deployment:
+  production:
+    branch: master
+    commands:
+      - heroku maintenance:on --app dry-mountain-3827
+      - heroku pg:backups capture --app dry-mountain-3827
+      - git push git@heroku.com:dry-mountain-3827.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app dry-mountain-3827
+      - heroku maintenance:off --app dry-mountain-3827
+  staging:
+    branch: staging
+    commands:
+      - heroku maintenance:on --app ona-staging-myflix
+      - git push git@heroku.com:ona-staging-myflix.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app ona-staging-myflix
+      - heroku maintenance:off --app ona-staging-myflix
