@@ -13,6 +13,7 @@ gem 'pg'
 gem 'bcrypt-ruby', '~> 3.1.2'
 gem 'sidekiq'
 gem 'unicorn'
+gem "sentry-raven"
 
 group :development, :test do
   gem 'pry'
@@ -23,7 +24,7 @@ group :development, :test do
   gem 'letter_opener'
 end
 
-group :test, :production do
+group :test, :production, :staging do
   gem "faker", "~> 1.1.2"
 end
 
@@ -42,7 +43,7 @@ group :test do
   gem 'capybara-email'
 end
 
-group :production do
+group :production, :staging do
   gem 'rails_12factor'
 end
 
