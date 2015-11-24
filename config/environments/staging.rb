@@ -18,7 +18,7 @@ Myflix::Application.configure do
 
   config.active_support.deprecation = :notify
 
-  config.action_mailer.delivery_method = :smtp
+  ActionMailer::Base.delivery_method = :smtp
 
   ActionMailer::Base.smtp_settings = {
     :port           => ENV['MAILGUN_SMTP_PORT'],
@@ -28,5 +28,4 @@ Myflix::Application.configure do
     :domain         => 'yourapp.heroku.com',
     :authentication => :plain,
   }
-  ActionMailer::Base.delivery_method = :smtp
 end
