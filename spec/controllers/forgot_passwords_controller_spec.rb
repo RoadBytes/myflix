@@ -31,6 +31,8 @@ describe ForgotPasswordsController do
 
       before(:each) { post :create, email: user.email }
 
+      after { ActionMailer::Base.deliveries.clear }
+
       it_behaves_like "tokenable" do
         let(:object) { user }
       end
