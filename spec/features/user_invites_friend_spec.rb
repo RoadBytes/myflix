@@ -28,11 +28,6 @@ feature "user invites a friend" do
     click_on "Send Invitation"
   end
 
-  def signout
-    click_on "dlabel"
-    click_on "Sign Out"
-  end
-
   def friend_accepts_invitation
     open_email('joe@mama.com')
     current_email.click_link "Accept this invitation"

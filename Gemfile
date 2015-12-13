@@ -14,6 +14,8 @@ gem 'bcrypt-ruby', '~> 3.1.2'
 gem 'sidekiq'
 gem 'unicorn'
 gem "sentry-raven"
+gem 'carrierwave-aws'
+gem 'mini_magick'
 
 group :development, :test do
   gem 'pry'

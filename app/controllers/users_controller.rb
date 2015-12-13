@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < AuthenticatedController
   before_action :require_user, only: [:show]
 
   def new
