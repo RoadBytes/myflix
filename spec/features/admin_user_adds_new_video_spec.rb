@@ -15,7 +15,7 @@ feature "admin user adds new video" do
   end
 
   def  fill_in_new_video_form
-    fill_in     "Title",       with: "Monk"
+    fill_in     "video_title", with: "Monk"
     select      "Drama",       from: "Category"
     fill_in     "Description", with: "Great crazy show"
     attach_file "Large cover", "spec/support/uploads/monk_large.jpg"

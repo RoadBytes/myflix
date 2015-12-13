@@ -17,7 +17,7 @@ shared_examples "require_admin" do
     it "sets the flash error message" do
       set_current_user
       action
-      expect(flash[:danger]).to_not be_nil
+      expect(flash[:danger]).to be_present
     end
   end
 
