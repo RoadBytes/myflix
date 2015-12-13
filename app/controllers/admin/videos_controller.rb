@@ -9,7 +9,7 @@ class Admin::VideosController < AdminsController
       flash[:success] = "New video titled: #{@video.title} created"
       redirect_to new_admin_video_path
     else
-      flash[:danger] = "Invalid input"
+      flash.now[:danger] = "Invalid input"
       render :new
     end
   end
