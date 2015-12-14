@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 ruby '2.1.2'
 
 gem 'bootstrap-sass'
@@ -16,6 +16,7 @@ gem 'unicorn'
 gem "sentry-raven"
 gem 'carrierwave-aws'
 gem 'mini_magick'
+gem 'stripe'
 
 group :development, :test do
   gem 'pry'
