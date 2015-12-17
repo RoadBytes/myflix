@@ -17,6 +17,7 @@ gem "sentry-raven"
 gem 'carrierwave-aws'
 gem 'mini_magick'
 gem 'stripe'
+gem 'figaro'
 
 group :development, :test do
   gem 'pry'
