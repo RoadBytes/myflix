@@ -26,6 +26,8 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'fabrication'
   gem 'letter_opener'
+  gem 'vcr'
+  gem 'webmock'
 end
 
 group :test, :production, :staging do
