@@ -20,11 +20,13 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+Capybara.server_port = 52662
 
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/cassettes'
   c.hook_into :webmock
   c.configure_rspec_metadata!
+  c.ignore_localhost = true
 end
 
 
@@ -36,8 +38,15 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do |example|
-    DatabaseCleaner.strategy = :deletion
+  config.before(:each) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each, :js => true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
     DatabaseCleaner.start
   end
 
@@ -51,7 +60,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -81,8 +90,4 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.expose_current_running_example_as :example
-
-  # so we can use :vcr rather than :vcr => true;
-  # in RSpec 3 this will no longer be necessary.
-  config.treat_symbols_as_metadata_keys_with_true_values = true
 end

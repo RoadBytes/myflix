@@ -23,7 +23,7 @@ describe UsersController do
       end
 
       it "renders to :new" do
-        invitation =  Fabricate(:invitation, token: "12345")
+        Fabricate(:invitation, token: "12345")
         get :new_with_invitation_token, token: "12345"
         expect(response).to render_template :new
       end
@@ -35,10 +35,25 @@ describe UsersController do
     end
   end
 
-  describe "POST #create" do
+  describe "POST .create" do
     context "with valid input not from invitation" do
       before do
-        post :create, user: {full_name: "Joe Joe", email: "email@email.com", password: "123456"}
+        VCR.use_cassette('UsersController/POSTcreate/not_from_invitation') do
+          Stripe.api_key   = ENV['stripe_test_secret_key'] || sk_test_pXabwpEi2zQZdvvHW6qOxjGW
+          token = Stripe::Token.create(
+            :card => {
+              :number    => "4242424242424242",
+              :exp_month => 6,
+              :exp_year  => 2018,
+              :cvc       => 123
+            }
+          ).id
+
+          post :create, user: {full_name: "Joe Joe", 
+                               email: "email@email.com", 
+                               password: "123456"}, 
+                        stripeToken: token
+        end
       end
 
       after { ActionMailer::Base.deliveries.clear }
@@ -71,10 +86,22 @@ describe UsersController do
         @alice      = Fabricate(:user)
         @invitation = Fabricate(:invitation, inviter: @alice, 
                                recipient_email: 'joe@example.com')
-        post :create, user: { email:     'joe@example.com', 
-                              full_name: 'Joe Doe',
-                              password:  '123456'},
-                      invitation_token: @invitation.token
+        VCR.use_cassette('UsersController/POSTcreate/from_invitation') do
+          Stripe.api_key   = ENV['stripe_test_secret_key'] || sk_test_pXabwpEi2zQZdvvHW6qOxjGW
+          token = Stripe::Token.create(
+            :card => {
+              :number    => "4242424242424242",
+              :exp_month => 6,
+              :exp_year  => 2018,
+              :cvc       => 123
+            }
+          ).id
+          post :create, user: { email:     'joe@example.com', 
+                                full_name: 'Joe Doe',
+                                password:  '123456'},
+                        invitation_token: @invitation.token,
+                        stripeToken: token
+        end
       end
 
       after { ActionMailer::Base.deliveries.clear }

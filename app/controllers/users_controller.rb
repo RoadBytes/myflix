@@ -24,20 +24,18 @@ class UsersController < AuthenticatedController
   def create
     @user            = User.new(user_params)
     invitation_token = params[:invitation_token]
-    Stripe.api_key   = ENV['stripe_test_secret_key']
 
     if @user.save
       handle_invitation invitation_token
 
       begin
-        Stripe::Charge.create(
+        StripeWrapper::Charge.create(
           amount: 999,
-          currency: "usd",
-          card: params[:stripeToken],
+          card:   params[:stripeToken],
           description: "Sign up charge for #{@user.email}"
         )
         AppMailer.delay.welcome_user(@user)
-        flash[:success] = "Welcome, you are now registered"
+        flash[:success] = "Welcome my child"
         session[:user_id] = @user.id
         redirect_to home_path
       rescue Stripe::CardError => e
