@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 ruby '2.1.2'
 
 gem 'bootstrap-sass'
@@ -16,6 +16,8 @@ gem 'unicorn'
 gem "sentry-raven"
 gem 'carrierwave-aws'
 gem 'mini_magick'
+gem 'stripe'
+gem 'figaro'
 
 group :development, :test do
   gem 'pry'
@@ -24,6 +26,8 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'fabrication'
   gem 'letter_opener'
+  gem 'vcr'
+  gem 'webmock'
 end
 
 group :test, :production, :staging do
@@ -39,9 +43,9 @@ end
 group :test do
   gem "shoulda-matchers"
   gem "capybara", "~> 2.1.0"
-  gem "database_cleaner", "~> 1.0.1"
+  gem "database_cleaner", "~> 1.4.1"
   gem "launchy", "~> 2.3.0"
-  gem "selenium-webdriver", "~> 2.39.0"
+  gem "selenium-webdriver", '2.45.0'
   gem 'capybara-email'
 end
 

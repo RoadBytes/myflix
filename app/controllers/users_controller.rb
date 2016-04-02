@@ -28,10 +28,21 @@ class UsersController < AuthenticatedController
     if @user.save
       handle_invitation invitation_token
 
-      AppMailer.delay.welcome_user(@user)
-      flash[:success] = "Welcome, you are now registered"
-      session[:user_id] = @user.id
-      redirect_to home_path
+      begin
+        StripeWrapper::Charge.create(
+          amount: 999,
+          card:   params[:stripeToken],
+          description: "Sign up charge for #{@user.email}"
+        )
+        AppMailer.delay.welcome_user(@user)
+        flash[:success] = "Welcome my child"
+        session[:user_id] = @user.id
+        redirect_to home_path
+      rescue Stripe::CardError => e
+        User.find_by(id: @user.id).destroy
+        flash[:danger] = e.message
+        redirect_to register_path
+      end
     else
       render :new
     end
